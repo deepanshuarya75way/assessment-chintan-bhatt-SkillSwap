@@ -1,7 +1,7 @@
 const userRequestCounts=new Map();
 
 const WINDOW_MS=60*1000;
-const MAX_REQUESTS=1;
+const MAX_REQUESTS=0;
 
 const aiMatchRateLimiter=(req,res,next)=>{
   const userId=req.user._id.toString();

@@ -9,13 +9,13 @@ const Matches = () => {
   const [searched, setSearched] = useState(false);
   const navigate = useNavigate();
 
-  const fetchMatches = async () => {
+  const fetchMatches = async (force=flase) => {
     setLoading(true);
     setError('');
     setSearched(true);
 
     try {
-      const { data } = await axios.post('/ai/match-suggestions');
+      const { data } = await axios.post('/ai/match-suggestions',{force});
       setSuggestions(data.suggestions || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Could not get AI suggestions');
@@ -45,7 +45,7 @@ const Matches = () => {
             Click below to get personalized AI-powered match suggestions
             based on your profile.
           </p>
-          <button onClick={fetchMatches} style={styles.generateBtn} disabled={loading}>
+          <button onClick={()=>fetchMatches(false)} style={styles.generateBtn} disabled={loading}>
             {loading ? '✨ Analyzing...' : '✨ Find My Best Matches'}
           </button>
         </div>
@@ -68,7 +68,7 @@ const Matches = () => {
 
       {!loading && suggestions.length > 0 && (
         <div style={styles.results}>
-          <button onClick={fetchMatches} style={styles.refreshBtn}>
+          <button onClick={()=>fetchMatches(true)} style={styles.refreshBtn}>
             🔄 Refresh Suggestions
           </button>
 

@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const User = require('../models/User');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash',generationConfig:{temperature:1.5,} });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash',generationConfig:{temperature:0.3,responseMimeType:'application/json'} });
 
 // @route   POST /api/ai/match-suggestions
 // @access  Private
@@ -68,8 +68,12 @@ Respond ONLY with a valid JSON array, no markdown, no explanation outside the JS
 ]
 `;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+  
+    const startTime=Date.now();
+    const result=await model.generateContent(prompt)
+    console.log("resposne",Date.now()-startTime);
+    const text=result.response.text().trim();
+    
     const cleanText = text.replace(/```json|```/g, '').trim();
     const suggestions = JSON.parse(cleanText);
 
